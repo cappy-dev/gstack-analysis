@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>gstack Skill Analysis for Mario | Cappy</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --card: #161b22;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-muted: #8b949e;
+  --accent: #58a6ff;
+  --green: #3fb950;
+  --yellow: #d29922;
+  --red: #f85149;
+  --purple: #bc8cff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+h2 { font-size: 1.3rem; margin: 2rem 0 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+h3 { font-size: 1.1rem; margin: 1.5rem 0 0.5rem; }
+p { margin-bottom: 0.75rem; color: var(--text-muted); }
+.subtitle { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+.badge-useful { background: rgba(63,185,80,0.15); color: var(--green); border: 1px solid rgba(63,185,80,0.3); }
+.badge-maybe { background: rgba(210,153,34,0.15); color: var(--yellow); border: 1px solid rgba(210,153,34,0.3); }
+.badge-skip { background: rgba(248,81,73,0.1); color: var(--red); border: 1px solid rgba(248,81,73,0.2); }
+.badge-claude { background: rgba(188,140,255,0.15); color: var(--purple); border: 1px solid rgba(188,140,255,0.3); }
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: var(--accent); }
+.card-header { display: flex; align-items: center; margin-bottom: 0.5rem; }
+.skill-name { font-size: 1.05rem; font-weight: 600; color: var(--text); }
+.skill-name code { color: var(--accent); font-family: 'SF Mono', Monaco, monospace; }
+.skill-desc { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem; }
+.tag {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-right: 0.4rem;
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.tag-method { background: rgba(88,166,255,0.1); color: var(--accent); border: 1px solid rgba(88,166,255,0.2); }
+.tag-tool { background: rgba(188,140,255,0.1); color: var(--purple); border: 1px solid rgba(188,140,255,0.2); }
+.tag-role { background: rgba(63,185,80,0.1); color: var(--green); border: 1px solid rgba(63,185,80,0.2); }
+.tag-ios { background: rgba(210,153,34,0.1); color: var(--yellow); border: 1px solid rgba(210,153,34,0.2); }
+.reasoning { 
+  margin-top: 0.75rem; 
+  padding-top: 0.75rem; 
+  border-top: 1px dashed var(--border);
+  font-size: 0.85rem;
+}
+.reasoning strong { color: var(--text); }
+.summary-box {
+  background: linear-gradient(135deg, rgba(88,166,255,0.05), rgba(188,140,255,0.05));
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+.summary-box h2 { border: none; margin-top: 0; }
+.summary-box ul { margin-left: 1.5rem; margin-top: 0.5rem; }
+.summary-box li { color: var(--text-muted); margin-bottom: 0.4rem; }
+.stats { display: flex; gap: 1rem; margin: 1rem 0; flex-wrap: wrap; }
+.stat {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+}
+.stat-num { font-size: 1.5rem; font-weight: 700; }
+.stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.8rem; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>gstack Skill Analysis for Mario</h1>
+<p class="subtitle">Reviewing all 23 skills in <a href="https://github.com/garrytan/gstack">garrytan/gstack</a> for relevance to Mario's workflow (Hermes Agent, GitHub automation, overnight cron, web design, no iOS).</p>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num" style="color:var(--green)">7</div><div class="stat-label">Useful</div></div>
+  <div class="stat"><div class="stat-num" style="color:var(--yellow)">4</div><div class="stat-label">Maybe</div></div>
+  <div class="stat"><div class="stat-num" style="color:var(--red)">8</div><div class="stat-label">Skip</div></div>
+  <div class="stat"><div class="stat-num" style="color:var(--purple)">4</div><div class="stat-label">Claude-only</div></div>
+</div>
+
+<div class="summary-box">
+  <h2>TL;DR</h2>
+  <p>gstack is a Claude Code skill suite by Garry Tan (YC CEO). It's designed for Claude Code specifically, not Hermes. Most skills use Claude Code's <code>allowed-tools</code> and hook system which Hermes doesn't support. However, several skills contain <strong>methodologies</strong> worth porting to Hermes skills:</p>
+  <ul>
+    <li><strong>investigate</strong> - systematic debugging methodology (4-phase root cause)</li>
+    <li><strong>cso</strong> - security audit checklist (OWASP + STRIDE + secrets scanning)</li>
+    <li><strong>review</strong> - pre-landing PR review checklist</li>
+    <li><strong>ship</strong> - ship workflow (tests, diff review, version bump, changelog, PR)</li>
+    <li><strong>scrape</strong> - web scraping pattern (prototype then codify)</li>
+    <li><strong>design-review</strong> - visual QA for AI-generated designs (find AI slop patterns)</li>
+    <li><strong>spec</strong> - turn vague intent into executable spec in 5 phases</li>
+  </ul>
+</div>
+
+<h2>Useful Skills (worth porting to Hermes)</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="skill-name"><code>/investigate</code></span>
+    <span class="badge badge-useful">USEFUL</span>
+  </div>
+  <p class="skill-desc">Systematic debugging with root cause investigation.</p>
+  <div>
+    <span class="tag tag-method">methodology</span>
+    <span class="tag tag-role">debugging</span>
+  </div>
+  <div class="reasoning">
+    <strong>Why useful:</strong> The 4-phase root cause debugging methodology (understand before fixing, systematic investigation, evidence-based diagnosis) is directly portable to a Hermes skill. Mario already values systematic debugging. The gstack version uses Claude hooks/ freeze guards which Hermes doesn't need, but the core methodology is gold.
+    <br><strong>Action:</strong> Check if Hermes <code>systematic-debugging</code> skill covers the same ground. If not, port the methodology.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="skill-name"><code>/cso</code></span>
+    <span class="badge badge-useful">USEFUL</span>
+  </div>
+  <p class="skill-desc">Chief Security Officer mode. OWASP + STRIDE + secrets archaeology + dependency supply chain + CI/CD security.</p>
+  <div>
+    <span class="tag tag-method">methodology</span>
+    <span class="tag tag-role">security</span>
+  </div>
+  <div class="reasoning">
+    <strong>Why useful:</strong> Comprehensive security audit checklist with two modes (daily zero-noise 8/10 confidence gate, monthly deep scan 2/10 bar). Mario does GitHub Actions audits and could benefit from secrets scanning, dependency supply chain checks, and OWASP Top 10 review. Trend tracking across audit runs is a nice touch.
+    <br><strong>Action:</strong> Port the audit checklist to a Hermes security skill. Already partially covered by <code>github-actions-audit</code> and <code>requesting-code-review</code>.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="skill-name"><code>/review</code></span>
+    <span class="badge badge-useful">USEFUL</span>
+  </div>
+  <p class="skill-desc">Pre-landing PR review. Catches production bugs before merge.</p>
+  <div>
+    <span class="tag tag-method">methodology</span>
+    <span class="tag tag-role">code review</span>
+  </div>
+  <div class="reasoning">
+    <strong>Why useful:</strong> Structured PR review checklist. Mario already has <code>requesting-code-review</code> and <code>github-commit-review-pr</code> skills. The gstack version adds specific review dimensions (logic errors, edge cases, performance, error handling, test coverage) that could enhance existing skills.
+    <br><strong>Action:</strong> Compare with existing review skills. Merge any missing checklist items.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="skill-name"><code>/ship</code></span>
+    <span class="badge badge-useful">USEFUL</span>
+  </div>
+  <p class="skill-desc">Ship workflow: merge base, run tests, review diff, bump VERSION, update CHANGELOG, commit, push, create PR.</p>
+  <div>
+    <span class="tag tag-method">methodology</span>
+    <span class="tag tag-role">release</span>
+  </div>
+  <div class="reasoning">
+    <strong>Why useful:</strong> Mario's overnight cron already does PR workflow. The ship skill adds VERSION bumping, CHANGELOG auto-update, and pre-ship test verification. The structured sequence (test first, review diff, then ship) is a good guardrail.
+    <br><strong>Action:</strong> Enhance <code>github-pr-workflow</code> skill with VERSION bump + CHANGELOG steps.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="skill-name"><code>/scrape</code></span>
+    <span class="badge badge-useful">USEFUL</span>
+  </div>
+  <p class="skill-desc">Pull data from a web page. Prototype scraping flow, then codify into a permanent browser-skill.</p>
+  <div>
+    <span class="tag tag-tool">tool</span>
+    <span class="tag tag-role">web scraping</span>
+  </div>
+  <div class="reasoning">
+    <strong>Why useful:</strong> The pattern of prototyping a scrape flow then persisting it as a reusable skill is exactly what Mario's tech-news workflow does. The "skillify" concept (codify a successful flow into a permanent skill) is a meta-pattern Hermes could use.
+    <br><strong>Action:</strong> Consider a "skillify" pattern for Hermes: save successful multi-step browser flows as reusable skills.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="skill-name"><code>/design-review</code></span>
+    <span class="badge badge-useful">USEFUL</span>
+  </div>
+  <p class="skill-desc">Designer's eye QA: finds visual inconsistency, spacing issues, hierarchy problems, AI slop patterns, and slow interactions. Then fixes them.</p>
+  <div>
+    <span class="tag tag-method">methodology</span>
+    <span class="tag tag-role">design QA</span>
+  </div>
+  <div class="reasoning">
+    <strong>Why useful:</strong> Mario does web design work (popular-web-designs, claude-design skills). An AI-slop pattern detector for visual design is directly useful. The idea of "find AI slop in designs" (generic-stock-photo patterns, over-used gradient combos, copy-paste component layouts) is unique and valuable.
+    <br><strong>Action:</strong> Port the AI slop visual checklist into a Hermes design review skill.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="skill-name"><code>/spec</code></span>
+    <span class="badge badge-useful">USEFUL</span>
+  </div>
+  <p class="skill-desc">Turn vague intent into a precise, executable spec in five phases.</p>
+  <div>
+    <span class="tag tag-method">methodology</span>
+    <span class="tag tag-role">planning</span>
+  </div>
+  <div class="reasoning">
+    <strong>Why useful:</strong> Mario already has <code>plan</code> and <code>writing-plans</code> skills. The 5-phase spec approach (vague intent to executable spec) could complement these. Worth comparing to see if the phases add value.
+    <br><strong>Action:</strong> Compare with existing planning skills. Port any missing phases.
+  </div>
+</div>
+
+<h2>Maybe Useful (conditional)</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="skill-name"><code>/office-hours</code></span>
+    <span class="badge badge-maybe">MAYBE</span>
+  </div>
+  <p class="skill-desc">YC Office Hours: product interrogation with 6 forcing questions.</p>
+  <div class="reasoning">
+    <strong>Why useful:</strong> Only if Mario wants a product-strategy brainstorming tool. Not directly relevant to current workflow (coding, cron, GitHub automation). Could be fun for evaluating project ideas.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="skill-name"><code>/retro</code></span>
+    <span class="badge badge-maybe">MAYBE</span>
+  </div>
+  <p class="skill-desc">Weekly engineering retrospective.</p>
+  <div class="reasoning">
+    <strong>Why useful:</strong> Mario's overnight cron produces a morning summary, which is similar. A weekly retro could aggregate the daily summaries into a weekly trend report. Low priority but interesting.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="skill-name"><code>/context-save</code> + <code>/context-restore</code></span>
+    <span class="badge badge-maybe">MAYBE</span>
+  </div>
+  <p class="skill-desc">Save working context mid-session and restore it later.</p>
+  <div class="reasoning">
+    <strong>Why useful:</strong> Hermes already has session persistence and memory. But the idea of explicitly snapshotting "I'm working on X, files A/B/C are relevant, next step is Y" could help across context compaction boundaries.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="skill-name"><code>/learn</code></span>
+    <span class="badge badge-maybe">MAYBE</span>
+  </div>
+  <p class="skill-desc">Manage project learnings (patterns, pitfalls, gotchas per repo).</p>
+  <div class="reasoning">
+    <strong>Why useful:</strong> Hermes already has the memory tool and skills for this. But the idea of a per-repo "learnings.jsonl" file that accumulates gotchas is interesting. Hermes skills kind of do this already though.
+  </div>
+</div>
+
+<h2>Skip (not relevant to Mario)</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="skill-name"><code>/ios-qa</code>, <code>/ios-fix</code>, <code>/ios-clean</code>, <code>/ios-sync</code>, <code>/ios-design-review</code></span>
+    <span class="badge badge-skip">SKIP</span>
+  </div>
+  <p class="skill-desc">5 iOS-specific skills for SwiftUI debugging, device QA, and DebugBridge management.</p>
+  <div class="reasoning">
+    <strong>Why skip:</strong> Mario has no iOS projects. These are deeply iOS/SwiftUI specific (DebugBridge SPM package, real device QA, Xcode integration).
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="skill-name"><code>/browse</code>, <code>/open-gstack-browser</code>, <code>/pair-agent</code>, <code>/setup-browser-cookies</code></span>
+    <span class="badge badge-claude">CLAUDE-ONLY</span>
+  </div>
+  <p class="skill-desc">Gstack's custom Chromium browser with sidebar extension and cookie import.</p>
+  <div class="reasoning">
+    <strong>Why skip:</strong> Hermes has its own browser tool stack. These depend on gstack's custom Chromium build and extension system. Not portable.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="skill-name"><code>/freeze</code> / <code>/unfreeze</code> / <code>/guard</code> / <code>/careful</code></span>
+    <span class="badge badge-skip">SKIP</span>
+  </div>
+  <p class="skill-desc">File edit guardrails: restrict edits to a directory, destructive command warnings.</p>
+  <div class="reasoning">
+    <strong>Why skip:</strong> Hermes has its own approval system (smart approvals). These use Claude Code hooks (PreToolUse matchers) that Hermes doesn't support.
+  </div>
+</div>
+
+<h2>Claude Code Only (not portable to Hermes)</h2>
+
+<div class="card">
+  <div class="card-header">
+    <span class="skill-name"><code>/autoplan</code>, <code>/benchmark</code>, <code>/benchmark-models</code>, <code>/codex</code></span>
+    <span class="badge badge-claude">CLAUDE-ONLY</span>
+  </div>
+  <p class="skill-desc">Cross-model benchmarks, Codex CLI wrapper, auto-review pipeline running CEO/design/eng/DX review sequentially.</p>
+  <div class="reasoning">
+    <strong>Why skip:</strong> These orchestrate Claude Code's subagent system and allowed-tools gating. The methodology (run 4 review types in sequence) is interesting but deeply tied to Claude Code's architecture. Hermes has <code>delegate_task</code> for subagents but the implementation is different.
+  </div>
+</div>
+
+<footer>
+  <p>Generated by Cappy on 2026-07-14. Source: <a href="https://github.com/garrytan/gstack">garrytan/gstack</a> (MIT license, 23 skills). Analysis based on Mario's Hermes Agent setup: overnight cron, GitHub automation, web design, blog publishing, no iOS.</p>
+</footer>
+
+</div>
+</body>
+</html>
