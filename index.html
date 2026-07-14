@@ -109,13 +109,12 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border
 <div class="container">
 
 <h1>gstack Skill Analysis for Mario</h1>
-<p class="subtitle">Reviewing all 23 skills in <a href="https://github.com/garrytan/gstack">garrytan/gstack</a> for relevance to Mario's workflow (Hermes Agent, GitHub automation, overnight cron, web design, no iOS).</p>
+<p class="subtitle">Reviewing all 23 skills in <a href="https://github.com/garrytan/gstack">garrytan/gstack</a> for relevance. Mario runs <strong>both</strong> Hermes Agent (Oracle, overnight cron, GitHub automation) and <strong>Claude Code</strong> locally for coding. Skills marked "Install in Claude Code" are Claude Code native; skills marked "Port to Hermes" have methodologies worth capturing into Hermes skills.</p>
 
 <div class="stats">
-  <div class="stat"><div class="stat-num" style="color:var(--green)">7</div><div class="stat-label">Useful</div></div>
+  <div class="stat"><div class="stat-num" style="color:var(--green)">19</div><div class="stat-label">Useful</div></div>
   <div class="stat"><div class="stat-num" style="color:var(--yellow)">4</div><div class="stat-label">Maybe</div></div>
-  <div class="stat"><div class="stat-num" style="color:var(--red)">8</div><div class="stat-label">Skip</div></div>
-  <div class="stat"><div class="stat-num" style="color:var(--purple)">4</div><div class="stat-label">Claude-only</div></div>
+  <div class="stat"><div class="stat-num" style="color:var(--red)">5</div><div class="stat-label">Skip (iOS only)</div></div>
 </div>
 
 <div class="summary-box">
@@ -146,7 +145,7 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border
   </div>
   <div class="reasoning">
     <strong>Why useful:</strong> The 4-phase root cause debugging methodology (understand before fixing, systematic investigation, evidence-based diagnosis) is directly portable to a Hermes skill. Mario already values systematic debugging. The gstack version uses Claude hooks/ freeze guards which Hermes doesn't need, but the core methodology is gold.
-    <br><strong>Action:</strong> Check if Hermes <code>systematic-debugging</code> skill covers the same ground. If not, port the methodology.
+    <br><strong>Action:</strong> Check if Hermes <code>systematic-debugging</code> skill covers the same ground. If not, port the methodology. <strong>Also install as-is in Claude Code</strong> for local debugging.
   </div>
 </div>
 
@@ -292,7 +291,7 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border
   </div>
 </div>
 
-<h2>Skip (not relevant to Mario)</h2>
+<h2>Skip (iOS only, no iOS projects)</h2>
 
 <div class="card">
   <div class="card-header">
@@ -301,42 +300,43 @@ footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border
   </div>
   <p class="skill-desc">5 iOS-specific skills for SwiftUI debugging, device QA, and DebugBridge management.</p>
   <div class="reasoning">
-    <strong>Why skip:</strong> Mario has no iOS projects. These are deeply iOS/SwiftUI specific (DebugBridge SPM package, real device QA, Xcode integration).
+    <strong>Why skip:</strong> Mario has no iOS projects. These are deeply iOS/SwiftUI specific (DebugBridge SPM package, real device QA, Xcode integration). If Mario ever picks up iOS dev, these would be immediately useful.
   </div>
 </div>
+
+<h2>Install Directly in Claude Code (you run Claude Code!)</h2>
 
 <div class="card">
   <div class="card-header">
     <span class="skill-name"><code>/browse</code>, <code>/open-gstack-browser</code>, <code>/pair-agent</code>, <code>/setup-browser-cookies</code></span>
-    <span class="badge badge-claude">CLAUDE-ONLY</span>
+    <span class="badge badge-useful">INSTALL IN CLAUDE</span>
   </div>
   <p class="skill-desc">Gstack's custom Chromium browser with sidebar extension and cookie import.</p>
   <div class="reasoning">
-    <strong>Why skip:</strong> Hermes has its own browser tool stack. These depend on gstack's custom Chromium build and extension system. Not portable.
+    <strong>Why now useful:</strong> Since you run Claude Code locally, these work for you. <code>/browse</code> gives fast headless browser QA, <code>/setup-browser-cookies</code> lets Claude access sites needing login (like your Karakeep instance!), <code>/pair-agent</code> pairs a remote agent with your browser.
+    <br><strong>Action:</strong> Run the gstack setup in Claude Code. These become <code>/browse</code> etc. slash commands.
   </div>
 </div>
-
-<div class="card">
-  <div class="card-header">
-    <span class="skill-name"><code>/freeze</code> / <code>/unfreeze</code> / <code>/guard</code> / <code>/careful</code></span>
-    <span class="badge badge-skip">SKIP</span>
-  </div>
-  <p class="skill-desc">File edit guardrails: restrict edits to a directory, destructive command warnings.</p>
-  <div class="reasoning">
-    <strong>Why skip:</strong> Hermes has its own approval system (smart approvals). These use Claude Code hooks (PreToolUse matchers) that Hermes doesn't support.
-  </div>
-</div>
-
-<h2>Claude Code Only (not portable to Hermes)</h2>
 
 <div class="card">
   <div class="card-header">
     <span class="skill-name"><code>/autoplan</code>, <code>/benchmark</code>, <code>/benchmark-models</code>, <code>/codex</code></span>
-    <span class="badge badge-claude">CLAUDE-ONLY</span>
+    <span class="badge badge-useful">INSTALL IN CLAUDE</span>
   </div>
   <p class="skill-desc">Cross-model benchmarks, Codex CLI wrapper, auto-review pipeline running CEO/design/eng/DX review sequentially.</p>
   <div class="reasoning">
-    <strong>Why skip:</strong> These orchestrate Claude Code's subagent system and allowed-tools gating. The methodology (run 4 review types in sequence) is interesting but deeply tied to Claude Code's architecture. Hermes has <code>delegate_task</code> for subagents but the implementation is different.
+    <strong>Why now useful:</strong> <code>/autoplan</code> runs CEO + design + eng + DX review in sequence with auto-decisions. Perfect for planning before building. <code>/codex</code> wraps OpenAI Codex CLI. Both work in your Claude Code setup.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="skill-name"><code>/freeze</code>, <code>/unfreeze</code>, <code>/guard</code>, <code>/careful</code></span>
+    <span class="badge badge-useful">INSTALL IN CLAUDE</span>
+  </div>
+  <p class="skill-desc">File edit guardrails: restrict edits to a directory, destructive command warnings.</p>
+  <div class="reasoning">
+    <strong>Why useful in Claude Code:</strong> When Claude Code is making changes across a big repo, <code>/freeze</code> scopes edits to one directory so it can't accidentally touch unrelated files. <code>/careful</code> intercepts destructive commands. Great safety net for autonomous coding.
   </div>
 </div>
 
